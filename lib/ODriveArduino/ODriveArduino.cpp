@@ -209,8 +209,24 @@ void ODriveArduino::SetVelocity(int motor_number, float velocity, float current_
 }
 
 /**
- * VERY DUBIOUS / COMPLETELY UNTESTED
+ * Set an ODrive property from the Teensy
+ * @param property The ODrive property to set
+ * @param value    The value for the property
  */
+void ODriveArduino::SetProperty(String property, String value) {
+    SendStartByte(); SendNLLen();
+    serial_ << "w " << property << " " << value << "\n";
+}
+
+/**
+ * Read an ODrive property from the Teensy
+ * @param property Property to query
+ * NOTE: You must somehow handle the reponse from the ODrive separately
+ */
+void ODriveArduino::ReadProperty(String property) {
+    SendStartByte(); SendNLLen();
+    serial_ << "r " << property << "\n";
+}
 
 /**
  * Attempt to read a float sent from the ODrive
