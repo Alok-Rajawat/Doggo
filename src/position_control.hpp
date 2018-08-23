@@ -19,6 +19,9 @@ void sinTrajectory(float t, float FREQ, float gaitOffset, float stanceHeight, fl
 void CartesianToEncoder(float x, float y, float leg_direction, float sign, float& enc0, float& enc1);
 void MoveLeg(ODriveArduino& odrive, float t, float FREQ, float gait_offset, float stanceHeight, float flightPercent, float stepLength, float upAMP, float downAMP, float leg_direction, float sign);
 void sinTrajectoryPosControl();
+void trot();
+void pronk();
+void bound();
 //------------------------------------------------------------------------------
 // PositionControlThread: Motor position control thread
 // Periodically calculates result from PID controller and sends off new motor
@@ -174,6 +177,150 @@ void MoveLeg(ODriveArduino& odrive, float t, float FREQ, float gait_offset,
     CartesianToEncoder(x, y, leg_direction, sign, enc0, enc1);
     odrive.SetPosition(0,(int)enc0);
     odrive.SetPosition(1,(int)enc1);
+}
+
+/**
+* Trot gait parameters
+*/
+void trot() {
+    // min radius = 0.8
+    // max radius = 0.25
+    const float stanceHeight = 0.15; // Desired height of body from ground during walking (m)
+    const float downAMP = 0.0; // Peak amplitude below stanceHeight in sinusoidal trajectory (m)
+    const float upAMP = 0.05; // Height the foot peaks at above the stanceHeight in sinusoidal trajectory (m)
+    const float flightPercent = 0.35; // Portion of the gait time should be doing the down portion of trajectory
+    const float stepLength = 0.0; // Length of entire step (m)
+    const float FREQ = 1.0; // Frequency of one gait cycle (Hz)
+    const float gaitOffset1 = 0.0; // Phase shift in percent (i.e. 25% shift is 0.25) to be passed in depending on Hip
+    float t = millis()/1000.0;
+
+    Serial.print(t);
+    Serial.print(" ");
+
+    const float leg0_offset = 0.0;
+    const float leg0_sign = -1.0;
+    const float leg0_direction = -1.0;
+    MoveLeg(odrv0Interface, t, FREQ, leg0_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg0_direction, leg0_sign);
+
+    const float leg1_offset = 0.5;
+    const float leg1_sign = -1.0;
+    const float leg1_direction = -1.0;
+    MoveLeg(odrv1Interface, t, FREQ, leg1_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg1_direction, leg1_sign);
+
+    const float leg2_offset = 0.5;
+    const float leg2_sign = -1.0;
+    const float leg2_direction = 1.0;
+    MoveLeg(odrv2Interface, t, FREQ, leg2_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg2_direction, leg2_sign);
+
+    const float leg3_offset = 0.0;
+    const float leg3_sign = -1.0;
+    const float leg3_direction = 1.0;
+    MoveLeg(odrv3Interface, t, FREQ, leg3_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg3_direction, leg3_sign);
+    Serial.println();
+}
+
+/**
+* Pronk gait parameters
+*/
+void pronk() {
+    // min radius = 0.8
+    // max radius = 0.25
+    const float stanceHeight = 0.15; // Desired height of body from ground during walking (m)
+    const float downAMP = 0.05; // Peak amplitude below stanceHeight in sinusoidal trajectory (m)
+    const float upAMP = 0.05; // Height the foot peaks at above the stanceHeight in sinusoidal trajectory (m)
+    const float flightPercent = 0.4; // Portion of the gait time should be doing the down portion of trajectory
+    const float stepLength = 0.0; //0.12; // Length of entire step (m)
+    const float FREQ = 1.0; // Frequency of one gait cycle (Hz)
+    const float gaitOffset1 = 0.0; // Phase shift in percent (i.e. 25% shift is 0.25) to be passed in depending on Hip
+    float t = millis()/1000.0;
+
+    Serial.print(t);
+    Serial.print(" ");
+
+    const float leg0_offset = 0.0;
+    const float leg0_sign = -1.0;
+    const float leg0_direction = -1.0;
+    MoveLeg(odrv0Interface, t, FREQ, leg0_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg0_direction, leg0_sign);
+
+    const float leg1_offset = 0.0;
+    const float leg1_sign = -1.0;
+    const float leg1_direction = -1.0;
+    MoveLeg(odrv1Interface, t, FREQ, leg1_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg1_direction, leg1_sign);
+
+    const float leg2_offset = 0.0;
+    const float leg2_sign = -1.0;
+    const float leg2_direction = 1.0;
+    MoveLeg(odrv2Interface, t, FREQ, leg2_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg2_direction, leg2_sign);
+
+    const float leg3_offset = 0.0;
+    const float leg3_sign = -1.0;
+    const float leg3_direction = 1.0;
+    MoveLeg(odrv3Interface, t, FREQ, leg3_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg3_direction, leg3_sign);
+    Serial.println();
+}
+
+/**
+* Bound gait parameters
+*/
+void bound() {
+    // min radius = 0.8
+    // max radius = 0.25
+    const float stanceHeight = 0.15; // Desired height of body from ground during walking (m)
+    const float downAMP = 0.4; // Peak amplitude below stanceHeight in sinusoidal trajectory (m)
+    const float upAMP = 0.04; // Height the foot peaks at above the stanceHeight in sinusoidal trajectory (m)
+    const float flightPercent = 0.5; // Portion of the gait time should be doing the down portion of trajectory
+    const float stepLength = 0.0; // Length of entire step (m)
+    const float FREQ = 1.0; // Frequency of one gait cycle (Hz)
+    const float gaitOffset1 = 0.0; // Phase shift in percent (i.e. 25% shift is 0.25) to be passed in depending on Hip
+    float t = millis()/1000.0;
+
+    Serial.print(t);
+    Serial.print(" ");
+
+    const float leg0_offset = 0.0;
+    const float leg0_sign = -1.0;
+    const float leg0_direction = -1.0;
+    MoveLeg(odrv0Interface, t, FREQ, leg0_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg0_direction, leg0_sign);
+
+    const float leg1_offset = 0.5;
+    const float leg1_sign = -1.0;
+    const float leg1_direction = -1.0;
+    MoveLeg(odrv1Interface, t, FREQ, leg1_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg1_direction, leg1_sign);
+
+    const float leg2_offset = 0.0;
+    const float leg2_sign = -1.0;
+    const float leg2_direction = 1.0;
+    MoveLeg(odrv2Interface, t, FREQ, leg2_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg2_direction, leg2_sign);
+
+    const float leg3_offset = 0.5;
+    const float leg3_sign = -1.0;
+    const float leg3_direction = 1.0;
+    MoveLeg(odrv3Interface, t, FREQ, leg3_offset, stanceHeight,
+        flightPercent, stepLength, upAMP, downAMP,
+        leg3_direction, leg3_sign);
+    Serial.println();
 }
 
 /**
