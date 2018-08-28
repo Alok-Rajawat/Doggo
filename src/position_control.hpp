@@ -1,11 +1,12 @@
+#ifndef POSITION_CONTROL_H
+#define POSITION_CONTROL_H
+
 #include "ChRt.h"
 #include "Arduino.h"
 #include "ODriveArduino.h"
 #include "config.hpp"
 #include "globals.hpp"
-
-#ifndef POSITION_CONTROL_H
-#define POSITION_CONTROL_H
+#include "jump.hpp"
 
 void CoupledPIDControl();
 void ODrivePosControl();
@@ -19,6 +20,7 @@ void sinTrajectory(float t, float FREQ, float gaitOffset, float stanceHeight, fl
 void CartesianToEncoder(float x, float y, float leg_direction, float sign, float& enc0, float& enc1);
 void MoveLeg(ODriveArduino& odrive, float t, float FREQ, float gait_offset, float stanceHeight, float flightPercent, float stepLength, float upAMP, float downAMP, float leg_direction, float sign);
 void sinTrajectoryPosControl();
+
 //------------------------------------------------------------------------------
 // PositionControlThread: Motor position control thread
 // Periodically calculates result from PID controller and sends off new motor
@@ -35,8 +37,12 @@ static THD_FUNCTION(PositionControlThread, arg) {
         // CoupledPIDControl();
         // ODrivePosControl();
         //sinTrajectoryPosControl();
-        chThdSleepMilliseconds(10);
 
+        // The bool execute_jump is in the jump.hpp file
+        if(ShouldExecuteJump()) {
+            ExecuteJump();
+        }
+        chThdSleepMilliseconds(10);
     }
 }
 
